@@ -96,7 +96,7 @@ public class SistemaGestion {
     }
     
     public void buscarCampana(String lugar) {
-        System.out.println("\nBuscando campanas en el lugar:'" + lugar );
+        System.out.println("\nBuscando campanas en el lugar:" + lugar );
         int encontrada = 0;
         for (Campana campana : listaCampanas) {
             if (campana.getLugar().toLowerCase().contains(lugar.toLowerCase())) {
@@ -110,7 +110,7 @@ public class SistemaGestion {
     }
     //-------------------------------------Segunda sobreCatga-------------------------------------------------------
     public void buscarCampana(String nombre, String lugar) {
-        System.out.println("\nBuscando campanas con el nombre: '" + nombre + "' y lugar: '" + lugar + "' ---");
+        System.out.println("\nBuscando campanas con el nombre: '" + nombre + "' y lugar: '" + lugar );
         int encontrada = 0;
         for (Campana campana : listaCampanas) {
             if (campana.getNombreCampana().equalsIgnoreCase(nombre) && campana.getLugar().equalsIgnoreCase(lugar)) {
@@ -135,7 +135,7 @@ public class SistemaGestion {
             System.out.println((i + 1) + ". " + listaCampanas.get(i).getNombreCampana());
         }
 
-        System.out.print("Ingrese el numero de la campana: ");
+        System.out.print("Ingrese el numero de la campana:");
         int indice = scanner.nextInt() - 1;
         scanner.nextLine();
 
