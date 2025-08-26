@@ -26,23 +26,29 @@ public class SistemaGestion {
     }
     public void cargarDatosCodigo(){
 
-        Donante d1 = new Donante("11-1", "Juan Perez", "O+");
-        Donante d2 = new Donante("22-2", "Ana Lopez", "A-");
-        Donante d3 = new Donante("33-3", "Pedro Soto", "B+");
+        Donante d1 = new Donante("11111111-1", "Juan Perez", "O+");
+        Donante d2 = new Donante("22222222-2", "Ana Lopez", "A-");
+        Donante d3 = new Donante("33333333-3", "Pedro Soto", "B+");
+        Donante d4 = new Donante("44444444-4", "Maria Rojas", "AB-");
 
         mapaDonantes.put(d1.getRUT(), d1);
         mapaDonantes.put(d2.getRUT(), d2);
         mapaDonantes.put(d3.getRUT(), d3);
+        mapaDonantes.put(d4.getRUT(), d4);
 
         Campana c1 = new Campana("Dona Vida Valparaiso", "Plaza Sotomayor");
         Campana c2 = new Campana("Sangre para Vina", "Mall Marina");
+        Campana c3 = new Campana("Campana de Invierno", "Hospital G. Fricke");
 
         c1.AgregarDonante(d1);
         c1.AgregarDonante(d2);
         c2.AgregarDonante(d3);
+        c3.AgregarDonante(d4);
+        c3.AgregarDonante(d1);
 
         listaCampanas.add(c1);
         listaCampanas.add(c2);
+        listaCampanas.add(c3);
         
         System.out.println("Donantes y campanas cargadas");
     }
