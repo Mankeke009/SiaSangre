@@ -126,7 +126,7 @@ public class SistemaGestion {
     public void iniciarMenu() {
         Scanner scanner = new Scanner(System.in);
         if (listaCampanas.isEmpty()){
-            System.out.println("!!! No hay campanas cargadas para mostrar. Revisa los archivos .csv.");
+            System.out.println("No hay campanas cargadas para mostrar. Revisa los archivos .csv o funcion cargarDatosCodigo.");
             return;
         }
 
