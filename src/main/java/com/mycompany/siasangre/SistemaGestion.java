@@ -67,7 +67,6 @@ public class SistemaGestion {
             System.err.println("Error al leer archivo");
         }
     }
-
     public void cargarCampanas() {
         try (BufferedReader br = new BufferedReader(new FileReader("campanas.csv"))) {
             String linea;
@@ -96,6 +95,34 @@ public class SistemaGestion {
         }
     }
     
+    public void buscarCampana(String lugar) {
+        System.out.println("\nBuscando campanas en el lugar:'" + lugar );
+        int encontrada = 0;
+        for (Campana campana : listaCampanas) {
+            if (campana.getLugar().toLowerCase().contains(lugar.toLowerCase())) {
+                System.out.println("Encontrada: " + campana.getNombreCampana() + " en " + campana.getLugar());
+                encontrada = 1;
+            }
+        }
+        if (encontrada == 0) {
+            System.out.println("No se encontraron en ese lugar.");
+        }
+    }
+    //-------------------------------------Segunda sobreCatga-------------------------------------------------------
+    public void buscarCampana(String nombre, String lugar) {
+        System.out.println("\nBuscando campanas con el nombre: '" + nombre + "' y lugar: '" + lugar + "' ---");
+        int encontrada = 0;
+        for (Campana campana : listaCampanas) {
+            if (campana.getNombreCampana().equalsIgnoreCase(nombre) && campana.getLugar().equalsIgnoreCase(lugar)) {
+                System.out.println("Coincidencia exacta encontrada: " + campana.getNombreCampana());
+                encontrada = 1;
+            }
+        }
+        if (encontrada == 0) {
+            System.out.println("No se encontraron campanas.");
+        }
+    }
+    //---------------------------------------------------------------------------------------------------------------
     public void iniciarMenu() {
         Scanner scanner = new Scanner(System.in);
         if (listaCampanas.isEmpty()){
