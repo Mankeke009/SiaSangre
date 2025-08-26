@@ -24,7 +24,28 @@ public class SistemaGestion {
         this.listaCampanas = new ArrayList<>();
         this.mapaDonantes = new HashMap<>();
     }
+    public void cargarDatosCodigo(){
 
+        Donante d1 = new Donante("11-1", "Juan Perez", "O+");
+        Donante d2 = new Donante("22-2", "Ana Lopez", "A-");
+        Donante d3 = new Donante("33-3", "Pedro Soto", "B+");
+
+        mapaDonantes.put(d1.getRUT(), d1);
+        mapaDonantes.put(d2.getRUT(), d2);
+        mapaDonantes.put(d3.getRUT(), d3);
+
+        Campana c1 = new Campana("Dona Vida Valparaiso", "Plaza Sotomayor");
+        Campana c2 = new Campana("Sangre para Vina", "Mall Marina");
+
+        c1.AgregarDonante(d1);
+        c1.AgregarDonante(d2);
+        c2.AgregarDonante(d3);
+
+        listaCampanas.add(c1);
+        listaCampanas.add(c2);
+        
+        System.out.println("Donantes y campanas cargadas");
+    }
     public void cargarDonantes() {
         try (BufferedReader br = new BufferedReader(new FileReader("donantes.csv"))) {
             String linea;

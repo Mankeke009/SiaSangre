@@ -12,8 +12,9 @@ public class SiaSangre {
 
     public static void main(String[] args) {
         SistemaGestion sistema = new SistemaGestion();
-        sistema.cargarDonantes();
-        sistema.cargarCampanas();
+        sistema.cargarDatosCodigo();
+        //sistema.cargarDonantes();
+        //sistema.cargarCampanas();
         sistema.iniciarMenu();
     }
 }
