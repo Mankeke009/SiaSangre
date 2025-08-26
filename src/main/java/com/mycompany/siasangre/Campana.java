@@ -15,7 +15,7 @@ public class Campana {
     private String lugar;
     private List<Donante> donantesregistrados;
 
-    public Campana(String nombreCampana, String lugar, List<Donante> donantesregistrados) {
+    public Campana(String nombreCampana, String lugar) {
         this.nombreCampana = nombreCampana;
         this.lugar = lugar;
         this.donantesregistrados = new ArrayList<>();
@@ -49,14 +49,14 @@ public class Campana {
         this.donantesregistrados.add(donante);
     }
     public void  mostrarDonantes(){
-        System.out.printf("\n Donantes de la campaña %s.", this.nombreCampana);
+        System.out.printf("\nDonantes de la campana %s.", this.nombreCampana);
         if (donantesregistrados.isEmpty()){
-            System.out.println("No hay donantes registrados en la campaña");
+            System.out.println("No hay donantes registrados en la campana");
             
         }
         else{
             for(Donante donante : donantesregistrados){
-                System.out.println(donante);
+                System.out.println("\n" + donante);
             }
         }
     }

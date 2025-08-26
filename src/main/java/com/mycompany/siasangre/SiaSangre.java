@@ -11,6 +11,9 @@ package com.mycompany.siasangre;
 public class SiaSangre {
 
     public static void main(String[] args) {
-        System.out.println("Hello World!");
+        SistemaGestion sistema = new SistemaGestion();
+        sistema.cargarDonantes();
+        sistema.cargarCampanas();
+        sistema.iniciarMenu();
     }
 }

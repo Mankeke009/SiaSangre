@@ -42,5 +42,8 @@ public class Donante {
     public void setTipoSangre(String tipoSangre) {
         this.tipoSangre = tipoSangre;
     }
-    
+    @Override
+    public String toString() {
+        return "Nombre:" + nombre + "| Tipo de Sangre:" + tipoSangre + "| RUT:" + RUT ;
+    }
 }
