@@ -94,7 +94,7 @@ public class SistemaGestion {
             System.err.println("!!! Error al leer 'campanas.csv': " + e.getMessage());
         }
     }
-    
+    //-----------------------------------------sobreCatga-----------------------------------------------------------
     public void buscarCampana(String lugar) {
         System.out.println("\nBuscando campanas en el lugar:" + lugar );
         int encontrada = 0;
@@ -123,41 +123,37 @@ public class SistemaGestion {
         }
     }
     //---------------------------------------------------------------------------------------------------------------
-    public void iniciarMenu() {
-        Scanner scanner = new Scanner(System.in);
+    private void gestionarCampana(Scanner scanner) {
         if (listaCampanas.isEmpty()){
-            System.out.println("No hay campanas cargadas para mostrar. Revisa los archivos .csv o funcion cargarDatosCodigo.");
-            return;
-        }
-
-        System.out.println("\nSeleccione una campana para gestionar");
+                System.out.println("No existen campanas");
+                return;
+            }
+        System.out.println("\n Selecciona una Camopana:");
         for (int i = 0; i < listaCampanas.size(); i++) {
             System.out.println((i + 1) + ". " + listaCampanas.get(i).getNombreCampana());
         }
 
-        System.out.print("Ingrese el numero de la campana:");
+        System.out.print("Ingrese el numero de la campana: ");
         int indice = scanner.nextInt() - 1;
         scanner.nextLine();
 
         if (indice < 0 || indice >= listaCampanas.size()) {
-             System.out.println("Seleccion invalida. Saliendo.");
-             scanner.close();
+             System.out.println("Seleccion invalida. Volviendo al menu principal.");
              return;
         }
-        
         Campana campanaSeleccionada = listaCampanas.get(indice);
         
-        int opcion = 0;
-        while (opcion != 3) {
-            System.out.println("\nMenu Campana: " + campanaSeleccionada.getNombreCampana());
+        int opcionGestion = 0;
+        while (opcionGestion != 3) {
+            System.out.println("\n--- Menu Gestion: " + campanaSeleccionada.getNombreCampana() + " ---");
             System.out.println("1. Agregar donante");
             System.out.println("2. Mostrar donantes de la campana");
-            System.out.println("3. Salir");
+            System.out.println("3. Volver al menu principal");
             System.out.print("Elija una opcion: ");
-            opcion = scanner.nextInt();
+            opcionGestion = scanner.nextInt();
             scanner.nextLine();
 
-            switch (opcion) {
+            switch (opcionGestion) {
                 case 1:
                     System.out.print("Ingrese RUT del nuevo donante: ");
                     String rut = scanner.nextLine();
@@ -166,14 +162,78 @@ public class SistemaGestion {
                     System.out.print("Ingrese Tipo de Sangre: ");
                     String tipoSangre = scanner.nextLine();
                     
-                    Donante nuevoDonante = new Donante(rut, nombre, tipoSangre);
-                    campanaSeleccionada.AgregarDonante(nuevoDonante);
-                    mapaDonantes.put(rut, nuevoDonante);
+                    // ---------------Utilizacion de sobrecarga-----------------
+                    campanaSeleccionada.agregarDonante(rut, nombre, tipoSangre);
+                    //----------------------------------------------------------
+                    mapaDonantes.put(rut, new Donante(rut, nombre, tipoSangre));
                     
-                    System.out.println("Donante agregado");
+                    System.out.println("¡Donante agregado con exito!");
                     break;
                 case 2:
                     campanaSeleccionada.mostrarDonantes();
+                    break;
+                case 3:
+                    System.out.println("Volviendo al menu principal...");
+                    break;
+                default:
+                    System.out.println("Opcion no valida.");
+            }
+        }
+    }
+    
+    
+    private void menuBuscarCampana(Scanner scanner) {
+        System.out.println("\n------BUSCAR CAMPANA------");
+        System.out.println("1. Buscar por lugar");
+        System.out.println("2. Buscar por nombre y lugar");
+        System.out.print("Elija una opcion de busqueda: ");
+        int opcionBusqueda = scanner.nextInt();
+        scanner.nextLine(); 
+        switch (opcionBusqueda) {
+            case 1:
+                {
+                    System.out.print("Ingrese el lugar a buscar: ");
+                    String lugar = scanner.nextLine();
+                    // ---------------Utilizacion de sobrecarga-----------------
+                    buscarCampana(lugar);
+                    //----------------------------------------------------------
+                    break;
+                }
+            case 2:
+                {
+                    System.out.print("Ingrese el nombre de la campana a buscar: ");
+                    String nombre = scanner.nextLine();
+                    System.out.print("Ingrese el lugar a buscar: ");
+                    String lugar = scanner.nextLine();
+                    // ---------------Utilizacion de sobrecarga-----------------
+                    buscarCampana(nombre, lugar);
+                    //----------------------------------------------------------
+                    break;
+                }
+            default:
+                System.out.println("Opcion de busqueda no valida.");
+                break;
+        }
+    }
+    
+    public void iniciarMenu() {
+        Scanner scanner = new Scanner(System.in); 
+        int opcion = 0;
+        while (opcion != 3) {
+            System.out.println("\n--------MENU PRINCIPAL--------");
+            System.out.println("1. Gestionar una Campana");
+            System.out.println("2. Buscar Campana");
+            System.out.println("3. Salir");
+            System.out.print("Elija una opcion: ");
+            opcion = scanner.nextInt();
+            scanner.nextLine();
+
+            switch (opcion) {
+                case 1:
+                    gestionarCampana(scanner);
+                    break;
+                case 2:
+                    menuBuscarCampana(scanner);
                     break;
                 case 3:
                     System.out.println("Saliendo");
