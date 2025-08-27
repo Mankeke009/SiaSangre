@@ -15,6 +15,6 @@ public class SiaSangre {
         sistema.cargarDatosCodigo();
         //sistema.cargarDonantes();
         //sistema.cargarCampanas();
-        sistema.iniciarMenu();
+        sistema.iniciarMenuPrincipal();
     }
 }

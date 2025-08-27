@@ -17,13 +17,15 @@ import java.util.Scanner;
  * @author Mankeke
  */
 public class SistemaGestion {
+    
     private List<Campana> listaCampanas;
     private Map<String, Donante> mapaDonantes;
-
+    
     public SistemaGestion() {
         this.listaCampanas = new ArrayList<>();
         this.mapaDonantes = new HashMap<>();
     }
+    
     public void cargarDatosCodigo(){
 
         Donante d1 = new Donante("11111111-1", "Juan Perez", "O+");
@@ -52,6 +54,7 @@ public class SistemaGestion {
         
         System.out.println("Donantes y campanas cargadas");
     }
+    
     public void cargarDonantes() {
         try (BufferedReader br = new BufferedReader(new FileReader("donantes.csv"))) {
             String linea;
@@ -67,6 +70,7 @@ public class SistemaGestion {
             System.err.println("Error al leer archivo");
         }
     }
+    
     public void cargarCampanas() {
         try (BufferedReader br = new BufferedReader(new FileReader("campanas.csv"))) {
             String linea;
@@ -94,58 +98,35 @@ public class SistemaGestion {
             System.err.println("!!! Error al leer 'campanas.csv': " + e.getMessage());
         }
     }
+    
     //-----------------------------------------sobreCatga-----------------------------------------------------------
-    public void buscarCampana(String lugar) {
-        System.out.println("\nBuscando campanas en el lugar:" + lugar );
-        int encontrada = 0;
+    public List<Campana> buscarCampana(String lugar) {
+        List<Campana> encontrados = new ArrayList<>();
         for (Campana campana : listaCampanas) {
             if (campana.getLugar().toLowerCase().contains(lugar.toLowerCase())) {
-                System.out.println("Encontrada: " + campana.getNombreCampana() + " en " + campana.getLugar());
-                encontrada = 1;
+               encontrados.add(campana);
             }
         }
-        if (encontrada == 0) {
-            System.out.println("No se encontraron en ese lugar.");
-        }
+        return encontrados;
     }
     //-------------------------------------Segunda sobreCatga-------------------------------------------------------
-    public void buscarCampana(String nombre, String lugar) {
-        System.out.println("\nBuscando campanas con el nombre: '" + nombre + "' y lugar: '" + lugar );
-        int encontrada = 0;
+    public  List<Campana> buscarCampana(String nombre, String lugar) {
+        List<Campana> encontrados = new ArrayList<>();
         for (Campana campana : listaCampanas) {
             if (campana.getNombreCampana().equalsIgnoreCase(nombre) && campana.getLugar().equalsIgnoreCase(lugar)) {
-                System.out.println("Coincidencia exacta encontrada: " + campana.getNombreCampana());
-                encontrada = 1;
+                if (campana.getNombreCampana().equalsIgnoreCase(nombre) && campana.getLugar().equalsIgnoreCase(lugar)) {
+                encontrados.add(campana);
+                }             
             }
         }
-        if (encontrada == 0) {
-            System.out.println("No se encontraron campanas.");
-        }
+        return encontrados;
     }
     //---------------------------------------------------------------------------------------------------------------
-    private void gestionarCampana(Scanner scanner) {
-        if (listaCampanas.isEmpty()){
-                System.out.println("No existen campanas");
-                return;
-            }
-        System.out.println("\n Selecciona una Camopana:");
-        for (int i = 0; i < listaCampanas.size(); i++) {
-            System.out.println((i + 1) + ". " + listaCampanas.get(i).getNombreCampana());
-        }
-
-        System.out.print("Ingrese el numero de la campana: ");
-        int indice = scanner.nextInt() - 1;
-        scanner.nextLine();
-
-        if (indice < 0 || indice >= listaCampanas.size()) {
-             System.out.println("Seleccion invalida. Volviendo al menu principal.");
-             return;
-        }
-        Campana campanaSeleccionada = listaCampanas.get(indice);
-        
+    
+    private void MenuGestionDonante(Scanner scanner, Campana campana){   
         int opcionGestion = 0;
         while (opcionGestion != 3) {
-            System.out.println("\n--- Menu Gestion: " + campanaSeleccionada.getNombreCampana() + " ---");
+            System.out.println("\n--- Menu Gestion: " + campana.getNombreCampana() + " ---");
             System.out.println("1. Agregar donante");
             System.out.println("2. Mostrar donantes de la campana");
             System.out.println("3. Volver al menu principal");
@@ -162,18 +143,16 @@ public class SistemaGestion {
                     System.out.print("Ingrese Tipo de Sangre: ");
                     String tipoSangre = scanner.nextLine();
                     
-                    // ---------------Utilizacion de sobrecarga-----------------
-                    campanaSeleccionada.agregarDonante(rut, nombre, tipoSangre);
-                    //----------------------------------------------------------
+                    campana.agregarDonante(rut, nombre, tipoSangre);
                     mapaDonantes.put(rut, new Donante(rut, nombre, tipoSangre));
                     
-                    System.out.println("¡Donante agregado con exito!");
+                    System.out.println("Donante agregado");
                     break;
                 case 2:
-                    campanaSeleccionada.mostrarDonantes();
+                    campana.mostrarDonantes();
                     break;
                 case 3:
-                    System.out.println("Volviendo al menu principal...");
+                    System.out.println("Volviendo al menu principal");
                     break;
                 default:
                     System.out.println("Opcion no valida.");
@@ -181,6 +160,35 @@ public class SistemaGestion {
         }
     }
     
+    private void SeleccionyGestionCampana(Scanner scanner, List<Campana> listaDeCampanas){
+        if (listaDeCampanas.isEmpty()){
+            System.out.println("\nNo hay campanas que coincidan.");
+            return;
+        }
+
+        System.out.println("\n----SELECCIONE CAMPANA----");
+        for (int i = 0; i < listaDeCampanas.size(); i++) {
+            System.out.println((i + 1) + ". " + listaDeCampanas.get(i).getNombreCampana() + " (" + listaDeCampanas.get(i).getLugar() + ")");
+        }
+
+        System.out.print("Ingrese el numero de la campana o 0 para volver : ");
+        int indice = scanner.nextInt() - 1;
+        scanner.nextLine();
+
+        if (indice == -1) {
+            return; 
+        }
+        
+        if (indice < 0 || indice >= listaDeCampanas.size()) {
+             System.out.println("Seleccion invalida. Volviendo al menu principal.");
+             return;
+        }
+        
+        
+        Campana campanaSeleccionada = listaDeCampanas.get(indice);
+        
+        MenuGestionDonante(scanner, campanaSeleccionada);
+    }
     
     private void menuBuscarCampana(Scanner scanner) {
         System.out.println("\n------BUSCAR CAMPANA------");
@@ -189,40 +197,42 @@ public class SistemaGestion {
         System.out.print("Elija una opcion de busqueda: ");
         int opcionBusqueda = scanner.nextInt();
         scanner.nextLine(); 
+        
+        List<Campana> resultados = new ArrayList<>();
+        String lugar;
+        String nombre;
+       
         switch (opcionBusqueda) {
             case 1:
-                {
-                    System.out.print("Ingrese el lugar a buscar: ");
-                    String lugar = scanner.nextLine();
-                    // ---------------Utilizacion de sobrecarga-----------------
-                    buscarCampana(lugar);
-                    //----------------------------------------------------------
-                    break;
-                }
-            case 2:
-                {
-                    System.out.print("Ingrese el nombre de la campana a buscar: ");
-                    String nombre = scanner.nextLine();
-                    System.out.print("Ingrese el lugar a buscar: ");
-                    String lugar = scanner.nextLine();
-                    // ---------------Utilizacion de sobrecarga-----------------
-                    buscarCampana(nombre, lugar);
-                    //----------------------------------------------------------
-                    break;
-                }
+                System.out.print("Ingrese el lugar a buscar: ");
+                lugar = scanner.nextLine();
+                // ---------------Utilizacion de sobrecarga-----------------
+                resultados = buscarCampana(lugar);
+                //----------------------------------------------------------
+                break;
+            case 2:  
+                System.out.print("Ingrese el nombre de la campana a buscar: ");
+                nombre = scanner.nextLine();
+                System.out.print("Ingrese el lugar a buscar: ");
+                lugar = scanner.nextLine();
+                // ---------------Utilizacion de sobrecarga-----------------
+                resultados = buscarCampana(nombre,lugar);
+                //----------------------------------------------------------
+                break;
             default:
                 System.out.println("Opcion de busqueda no valida.");
                 break;
         }
+        SeleccionyGestionCampana(scanner, resultados);
     }
     
-    public void iniciarMenu() {
+    public void iniciarMenuPrincipal() {
         Scanner scanner = new Scanner(System.in); 
         int opcion = 0;
         while (opcion != 3) {
             System.out.println("\n--------MENU PRINCIPAL--------");
             System.out.println("1. Gestionar una Campana");
-            System.out.println("2. Buscar Campana");
+            System.out.println("2. Buscar Campana y Gestionar");
             System.out.println("3. Salir");
             System.out.print("Elija una opcion: ");
             opcion = scanner.nextInt();
@@ -230,7 +240,7 @@ public class SistemaGestion {
 
             switch (opcion) {
                 case 1:
-                    gestionarCampana(scanner);
+                    SeleccionyGestionCampana(scanner, this.listaCampanas);
                     break;
                 case 2:
                     menuBuscarCampana(scanner);
@@ -244,4 +254,5 @@ public class SistemaGestion {
         }
         scanner.close();
     }
+    
 }
