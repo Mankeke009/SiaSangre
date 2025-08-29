@@ -44,7 +44,7 @@ public class Campana {
     public void setDonantesregistrados(List<Donante> donantesregistrados) {
         this.donantesregistrados = donantesregistrados;
     }
-  
+    //--------------------------------------------------------------------------
     public void AgregarDonante(Donante donante) {
         this.donantesregistrados.add(donante);
     }
