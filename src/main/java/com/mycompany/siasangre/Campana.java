@@ -44,12 +44,12 @@ public class Campana {
     public void setDonantesregistrados(List<Donante> donantesregistrados) {
         this.donantesregistrados = donantesregistrados;
     }
-    //--------------------------------------------------------------------------
+    //------------------------TERCERA SOBRECARGA----------------------------------------
     public void AgregarDonante(Donante donante) {
         this.donantesregistrados.add(donante);
     }
-    //------------------------SobreCarga----------------------------------------
-    public void agregarDonante(String rut, String nombre, String tipoSangre) {
+    //------------------------TERCERA SOBRECARGA----------------------------------------
+    public void AgregarDonante(String rut, String nombre, String tipoSangre) {
         Donante nuevoDonante = new Donante(rut, nombre, tipoSangre);
         this.donantesregistrados.add(nuevoDonante);
     }

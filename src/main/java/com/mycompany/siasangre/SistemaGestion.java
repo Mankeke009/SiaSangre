@@ -41,13 +41,13 @@ public class SistemaGestion {
         Campana c1 = new Campana("Dona Vida Valparaiso", "Plaza Sotomayor");
         Campana c2 = new Campana("Sangre para Vina", "Mall Marina");
         Campana c3 = new Campana("Campana de Invierno", "Hospital G. Fricke");
-
-        c1.AgregarDonante(d1);
-        c1.AgregarDonante(d2);
-        c2.AgregarDonante(d3);
-        c3.AgregarDonante(d4);
-        c3.AgregarDonante(d1);
-
+//-----------------------------------------------------------------------------------
+        c1.AgregarDonante(d1);//Uso Tercera Sobre carga
+        c1.AgregarDonante(d2);//Uso Tercera Sobre carga
+        c2.AgregarDonante(d3);//Uso Tercera Sobre carga
+        c3.AgregarDonante(d4);//Uso Tercera Sobre carga
+        c3.AgregarDonante(d1);//Uso Tercera Sobre carga
+//-------------------------------------------------------------------------------------
         listaCampanas.add(c1);
         listaCampanas.add(c2);
         listaCampanas.add(c3);
@@ -99,7 +99,7 @@ public class SistemaGestion {
         }
     }
     
-    //-----------------------------------------sobreCarga-----------------------------------------------------------
+    //-----------------------------------------SEGUNDA SOBRECARGA-----------------------------------------------------------
     public List<Campana> buscarCampana(String lugar) {
         List<Campana> encontrados = new ArrayList<>();
         for (Campana campana : listaCampanas) {
@@ -109,7 +109,7 @@ public class SistemaGestion {
         }
         return encontrados;
     }
-    //-------------------------------------Segunda sobreCarga-------------------------------------------------------
+    //-------------------------------------SEGUNDA SOBRECARGA-------------------------------------------------------
     public  List<Campana> buscarCampana(String nombre, String lugar) {
         List<Campana> encontrados = new ArrayList<>();
         for (Campana campana : listaCampanas) {
@@ -119,7 +119,7 @@ public class SistemaGestion {
         }
         return encontrados;
     }
-    //---------------------------------------------------------------------------------------------------------------
+    //----------------------------PRIMERA SOBRECARGA--------------------------------------------------------
     private void buscarDonante(String rut){
         System.out.println("\nbuscando donante con el RUT: " + rut );
         Donante donanteEncontrado = mapaDonantes.get(rut.trim()); // El trim es para borrar espacios en blanco al princio al final de texto
@@ -129,7 +129,7 @@ public class SistemaGestion {
             System.out.println("No hay ningun donante con ese rut");
         }
     }
-    //---------------------------------------------------------------------------------------------------------------
+    //----------------------------PRIMERA SOBRECARGA----------------------------------------------------------------
     private void buscarDonante(String nombre,int uno){
         System.out.println("\nbuscando donante con el nombre: " + nombre);
         int encontrado = 0;
@@ -159,12 +159,12 @@ public class SistemaGestion {
                 case 1:
                     System.out.println("Ingrese el RUT: ");
                     String rut = scanner.nextLine();
-                    buscarDonante(rut);
+                    buscarDonante(rut); //UTILIZACION PRIMERA SOBRECARGA
                     break;
                 case 2:
                     System.out.println("Ingrese el nombre: ");
                     String nombre = scanner.nextLine();
-                    buscarDonante(nombre,1);
+                    buscarDonante(nombre,1);//UTILIZACION PRIMERA SOBRECARGA
                     break;
                 case 3:
                     System.out.println("Volviendo al menu principal");
@@ -196,7 +196,7 @@ public class SistemaGestion {
                     System.out.print("Ingrese Tipo de Sangre: ");
                     String tipoSangre = scanner.nextLine();
                     
-                    campana.agregarDonante(rut, nombre, tipoSangre);
+                    campana.AgregarDonante(rut, nombre, tipoSangre); // Uso tercera sobrecarga
                     mapaDonantes.put(rut, new Donante(rut, nombre, tipoSangre));
                     
                     System.out.println("Donante agregado");
@@ -261,7 +261,7 @@ public class SistemaGestion {
             case 1:
                 System.out.print("Ingrese el lugar a buscar: ");
                 lugar = scanner.nextLine();
-                // ---------------Utilizacion de sobrecarga-----------------
+                // ---------------Utilizacion de SEGUNDA sobrecarga-----------------
                 resultados = buscarCampana(lugar);
                 //----------------------------------------------------------
                 break;
@@ -270,7 +270,7 @@ public class SistemaGestion {
                 nombre = scanner.nextLine();
                 System.out.print("Ingrese el lugar a buscar: ");
                 lugar = scanner.nextLine();
-                // ---------------Utilizacion de sobrecarga-----------------
+                // ---------------Utilizacion de SEGUNDA sobrecarga-----------------
                 resultados = buscarCampana(nombre,lugar);
                 //----------------------------------------------------------
                 break;
