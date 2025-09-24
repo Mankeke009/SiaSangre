@@ -310,4 +310,7 @@ public class SistemaGestion {
         scanner.close();
     }
     
+    public List<Campana> getListaCampanas() {
+        return this.listaCampanas;
+    }
 }
