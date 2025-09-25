@@ -6,12 +6,13 @@ package com.mycompany.siasangre;
  */
 import java.io.BufferedReader;
 import java.io.FileReader;
+import java.util.HashMap;
+import java.util.Map;
+import java.io.FileWriter;
+import java.io.PrintWriter;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.Scanner;
 /**
  *
  * @author Mankeke
@@ -26,7 +27,7 @@ public class SistemaGestion {
         this.mapaDonantes = new HashMap<>();
     }
     
-    public void cargarDatosCodigo(){
+    /*public void cargarDatosCodigo(){
 
         Donante d1 = new Donante("11111111-1", "Juan Perez", "O+");
         Donante d2 = new Donante("22222222-2", "Ana Lopez", "A-");
@@ -54,7 +55,7 @@ public class SistemaGestion {
         
         System.out.println("Donantes y campanas cargadas");
     }
-    
+    */
     public void cargarDonantes() {
         try (BufferedReader br = new BufferedReader(new FileReader("donantes.csv"))) {
             String linea;
@@ -93,9 +94,9 @@ public class SistemaGestion {
                 }
                 listaCampanas.add(campana);
             }
-            System.out.println(">>> " + listaCampanas.size() + " campanas cargadas exitosamente.");
+            System.out.println(listaCampanas.size() + " campanas cargadas exitosamente.");
         } catch (IOException e) {
-            System.err.println("!!! Error al leer 'campanas.csv': " + e.getMessage());
+            System.err.println("Error al leer archivo" + e.getMessage());
         }
     }
     
@@ -120,197 +121,77 @@ public class SistemaGestion {
         return encontrados;
     }
     //----------------------------PRIMERA SOBRECARGA--------------------------------------------------------
-    private void buscarDonante(String rut){
-        System.out.println("\nbuscando donante con el RUT: " + rut );
-        Donante donanteEncontrado = mapaDonantes.get(rut.trim()); // El trim es para borrar espacios en blanco al princio al final de texto
-        if (donanteEncontrado != null){
-            System.out.println("Donante encontrado: " + donanteEncontrado);
-        } else{
-            System.out.println("No hay ningun donante con ese rut");
-        }
-    }
+    public List<Donante> buscarDonante(String rut, Campana campana) {
+       List<Donante> encontrados = new ArrayList<>(); // Creamos una lista vacía
+       rut = rut.trim();
+       for (Donante donante : campana.getDonantesregistrados()) {
+           if (donante.getRUT().equalsIgnoreCase(rut)) {
+               encontrados.add(donante); // Si lo encontramos, lo añadimos a la lista
+               break; // Como el RUT es único, no hay necesidad de seguir buscando
+           }
+       }
+       return encontrados; // Devolvemos la lista (tendrá 0 o 1 elemento)
+   }
     //----------------------------PRIMERA SOBRECARGA----------------------------------------------------------------
-    private void buscarDonante(String nombre,int uno){
-        System.out.println("\nbuscando donante con el nombre: " + nombre);
-        int encontrado = 0;
-        for (Donante donante : mapaDonantes.values()) {
-            if (donante.getNombre().toLowerCase().contains(nombre.toLowerCase().trim())) {
-                System.out.println("Encontrado: " + donante);
-                encontrado = 1;
+    public List<Donante> buscarDonante(String nombre, Campana campana, int modo) {
+        List<Donante> encontrados = new ArrayList<>();
+        nombre = nombre.trim().toLowerCase();
+        for (Donante donante : campana.getDonantesregistrados()) {
+            if (donante.getNombre().toLowerCase().contains(nombre)) {
+                encontrados.add(donante);
             }
         }
-        if (encontrado == 0){
-            System.out.println("No hay ningun donante con ese nombre");
+    return encontrados;
+}
+    //---------------------------------------------------------------------------------------------------------------
+
+    public void guardarDonantesCSV() {
+        try (PrintWriter pw = new PrintWriter(new FileWriter("donantes.csv"))) {
+            pw.println("# RUT,Nombre,TipoSangre");
+
+            for (Donante donante : this.mapaDonantes.values()) {
+                pw.println(donante.getRUT() + "," + donante.getNombre() + "," + donante.getTipoSangre());
+            }
+            System.out.println("Donantes guardados en donantes.csv");
+        } catch (IOException e) {
+            System.err.println("Error al guardar en 'donantes.csv': " + e.getMessage());
         }
- 
+    }
+
+    public void guardarCampanasCSV() {
+        try (PrintWriter pw = new PrintWriter(new FileWriter("campanas.csv"))) {
+            pw.println("# Nombre,Lugar,RUTs_Donantes_Separados_Por_|");
+
+            for (Campana campana : this.listaCampanas) {
+                StringBuilder linea = new StringBuilder();
+                linea.append(campana.getNombreCampana());
+                linea.append(",");
+                linea.append(campana.getLugar());
+
+                if (!campana.getDonantesregistrados().isEmpty()) {
+                    linea.append(",");
+                    List<String> rutsDonantes = new ArrayList<>();
+                    for (Donante donante : campana.getDonantesregistrados()) {
+                        rutsDonantes.add(String.valueOf(donante.getRUT()));
+                    }
+                    linea.append(String.join("|", rutsDonantes));
+                }
+                pw.println(linea.toString());
+            }
+            System.out.println("Campanas guardadas campanas.csv");
+        } catch (IOException e) {
+            System.err.println("Error al guardar en 'campanas.csv': " + e.getMessage());
+        }
     }
     //---------------------------------------------------------------------------------------------------------------
-    private void menuBuscarDonante(Scanner scanner, Campana campana){
-        int opcionGestion = 0;
-        while (opcionGestion != 3) {
-            System.out.println("\n--- Menu Buscar Donante --- ");
-            System.out.println("1. Buscar Donante por rut");
-            System.out.println("2. Buscar Donante por Nombre");
-            System.out.println("3. Volver al menu principal");
-            System.out.print("Elija una opcion: ");
-            opcionGestion = scanner.nextInt();
-            scanner.nextLine();
-            switch (opcionGestion) {
-                case 1:
-                    System.out.println("Ingrese el RUT: ");
-                    String rut = scanner.nextLine();
-                    buscarDonante(rut); //UTILIZACION PRIMERA SOBRECARGA
-                    break;
-                case 2:
-                    System.out.println("Ingrese el nombre: ");
-                    String nombre = scanner.nextLine();
-                    buscarDonante(nombre,1);//UTILIZACION PRIMERA SOBRECARGA
-                    break;
-                case 3:
-                    System.out.println("Volviendo al menu principal");
-                    break;
-                default:
-                    System.out.println("Opcion no valida.");
-            }
-        }
-    }
- 
-    private void MenuGestionDonante(Scanner scanner, Campana campana){   
-        int opcionGestion = 0;
-        while (opcionGestion != 4) {
-            System.out.println("\n--- Menu Gestion: " + campana.getNombreCampana() + " ---");
-            System.out.println("1. Agregar donante");
-            System.out.println("2. Mostrar donantes de la campana");
-            System.out.println("3. Buscar donantes");
-            System.out.println("4. Volver al menu principal");
-            System.out.print("Elija una opcion: ");
-            opcionGestion = scanner.nextInt();
-            scanner.nextLine();
-
-            switch (opcionGestion) {
-                case 1:
-                    System.out.print("Ingrese RUT del nuevo donante: ");
-                    String rut = scanner.nextLine();
-                    System.out.print("Ingrese Nombre: ");
-                    String nombre = scanner.nextLine();
-                    System.out.print("Ingrese Tipo de Sangre: ");
-                    String tipoSangre = scanner.nextLine();
-                    
-                    campana.AgregarDonante(rut, nombre, tipoSangre); // Uso tercera sobrecarga
-                    mapaDonantes.put(rut, new Donante(rut, nombre, tipoSangre));
-                    
-                    System.out.println("Donante agregado");
-                    break;
-                case 2:
-                    campana.mostrarDonantes();
-                    break;
-                case 3:
-                    menuBuscarDonante(scanner, campana);
-                case 4:
-                    System.out.println("Volviendo al menu principal");
-                    break;
-                default:
-                    System.out.println("Opcion no valida.");
-            }
-        }
-    }
-    
-    private void SeleccionyGestionCampana(Scanner scanner, List<Campana> listaDeCampanas){
-        if (listaDeCampanas.isEmpty()){
-            System.out.println("\nNo hay campanas que coincidan.");
-            return;
-        }
-
-        System.out.println("\n----SELECCIONE CAMPANA----");
-        for (int i = 0; i < listaDeCampanas.size(); i++) {
-            System.out.println((i + 1) + ". " + listaDeCampanas.get(i).getNombreCampana() + " (" + listaDeCampanas.get(i).getLugar() + ")");
-        }
-
-        System.out.print("Ingrese el numero de la campana o 0 para volver : ");
-        int indice = scanner.nextInt() - 1;
-        scanner.nextLine();
-
-        if (indice == -1) {
-            return; 
-        }
-        
-        if (indice < 0 || indice >= listaDeCampanas.size()) {
-             System.out.println("Seleccion invalida. Volviendo al menu principal.");
-             return;
-        }
-        
-        
-        Campana campanaSeleccionada = listaDeCampanas.get(indice);
-        
-        MenuGestionDonante(scanner, campanaSeleccionada);
-    }
-    
-    private void menuBuscarCampana(Scanner scanner) {
-        System.out.println("\n------BUSCAR CAMPANA------");
-        System.out.println("1. Buscar por lugar");
-        System.out.println("2. Buscar por nombre y lugar");
-        System.out.print("Elija una opcion de busqueda: ");
-        int opcionBusqueda = scanner.nextInt();
-        scanner.nextLine(); 
-        
-        List<Campana> resultados = new ArrayList<>();
-        String lugar;
-        String nombre;
-       
-        switch (opcionBusqueda) {
-            case 1:
-                System.out.print("Ingrese el lugar a buscar: ");
-                lugar = scanner.nextLine();
-                // ---------------Utilizacion de SEGUNDA sobrecarga-----------------
-                resultados = buscarCampana(lugar);
-                //----------------------------------------------------------
-                break;
-            case 2:  
-                System.out.print("Ingrese el nombre de la campana a buscar: ");
-                nombre = scanner.nextLine();
-                System.out.print("Ingrese el lugar a buscar: ");
-                lugar = scanner.nextLine();
-                // ---------------Utilizacion de SEGUNDA sobrecarga-----------------
-                resultados = buscarCampana(nombre,lugar);
-                //----------------------------------------------------------
-                break;
-            default:
-                System.out.println("Opcion de busqueda no valida.");
-                break;
-        }
-        SeleccionyGestionCampana(scanner, resultados);
-    }
-    
-    public void iniciarMenuPrincipal() {
-        Scanner scanner = new Scanner(System.in); 
-        int opcion = 0;
-        while (opcion != 3) {
-            System.out.println("\n--------MENU PRINCIPAL--------");
-            System.out.println("1. Gestionar una Campana");
-            System.out.println("2. Buscar Campana y Gestionar");
-            System.out.println("3. Salir");
-            System.out.print("Elija una opcion: ");
-            opcion = scanner.nextInt();
-            scanner.nextLine();
-
-            switch (opcion) {
-                case 1:
-                    SeleccionyGestionCampana(scanner, this.listaCampanas);
-                    break;
-                case 2:
-                    menuBuscarCampana(scanner);
-                    break;
-                case 3:
-                    System.out.println("Saliendo");
-                    break;
-                default:
-                    System.out.println("Opcion no valida.");
-            }
-        }
-        scanner.close();
-    }
-    
+   
     public List<Campana> getListaCampanas() {
         return this.listaCampanas;
+    }
+    //---------------------------------------------------------------------------------------------------------------
+    
+    public void agregarDonanteASistema(Donante donante, Campana campana) {
+        this.mapaDonantes.put(donante.getRUT(), donante);
+        campana.AgregarDonante(donante);
     }
 }

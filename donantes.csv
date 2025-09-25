@@ -1,5 +1,6 @@
-#RUT,NOMBRE,TIPO_SANGRE
-11111111-1,Juan Perez,O+
-22222222-2,Ana Lopez,A-
-33333333-3,Pedro Soto,B+
+# RUT,Nombre,TipoSangre
 44444444-4,Maria Rojas,AB-
+22222222-2,Ana Lopez,A-
+21450165-1,Joaquin Diaz,A+
+11111111-1,Juan Perez,O+
+33333333-3,Pedro Soto,B+

@@ -15,14 +15,22 @@ public class VentanaPrincipal extends javax.swing.JFrame {
     private SistemaGestion sistema; 
     private DefaultListModel<String> modeloLista; 
 
-    public VentanaPrincipal(SistemaGestion sistema) { 
+    public VentanaPrincipal(SistemaGestion sistema) {
         this.sistema = sistema;
         initComponents();
-        
+
         modeloLista = new DefaultListModel<>();
-        this.listaCampanasUI.setModel(modeloLista); 
+        this.listaCampanasUI.setModel(modeloLista);
         actualizarListaCampanas();
-    }
+
+        addWindowListener(new java.awt.event.WindowAdapter() {
+            @Override
+            public void windowClosing(java.awt.event.WindowEvent windowEvent) {
+                sistema.guardarDonantesCSV();
+                sistema.guardarCampanasCSV();
+            }
+    });
+}
 
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
@@ -108,7 +116,7 @@ public class VentanaPrincipal extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnAgregarCampanaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAgregarCampanaActionPerformed
-        String nombre = JOptionPane.showInputDialog(this, "Ingrese nombre de la nueva campaña:", "Agregar Campaña", JOptionPane.PLAIN_MESSAGE);
+        String nombre = JOptionPane.showInputDialog(this, "Ingrese nombre de campaña:", "Agregar Campaña", JOptionPane.PLAIN_MESSAGE);
         if (nombre == null || nombre.trim().isEmpty()) {
             return;
         }
@@ -123,27 +131,25 @@ public class VentanaPrincipal extends javax.swing.JFrame {
 
         this.actualizarListaCampanas();
 
-        JOptionPane.showMessageDialog(this, "Campaña agregada exitosamente.", "Éxito", JOptionPane.INFORMATION_MESSAGE);
+        JOptionPane.showMessageDialog(this, "Campaña agregada.", "Éxito", JOptionPane.INFORMATION_MESSAGE);
     }//GEN-LAST:event_btnAgregarCampanaActionPerformed
 
     private void btnEliminarCampanaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEliminarCampanaActionPerformed
         int indiceSeleccionado = this.listaCampanasUI.getSelectedIndex();
 
         if (indiceSeleccionado == -1) {
-            JOptionPane.showMessageDialog(this, "Por favor, seleccione una campaña para eliminar.", "Error", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, "Seleccione una campaña para eliminar.", "Error", JOptionPane.ERROR_MESSAGE);
             return;
         }
 
         int confirmacion = JOptionPane.showConfirmDialog(this,
-                "¿Está seguro de que desea eliminar esta campaña y todos sus donantes asociados?",
+                "Está seguro de que desea eliminar esta campaña y todos sus donantes",
                 "Confirmar Eliminación",
                 JOptionPane.YES_NO_OPTION);
 
         if (confirmacion == JOptionPane.YES_OPTION) {
-            // Simplemente removemos la campaña de la lista principal en SistemaGestion
             this.sistema.getListaCampanas().remove(indiceSeleccionado);
 
-            // Refrescamos la lista en la pantalla
             this.actualizarListaCampanas();
 
             JOptionPane.showMessageDialog(this, "Campaña eliminada exitosamente.", "Éxito", JOptionPane.INFORMATION_MESSAGE);
@@ -157,7 +163,7 @@ public class VentanaPrincipal extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(this, "Por favor, seleccione una campaña para gestionar.", "Error", JOptionPane.ERROR_MESSAGE);
     } else {
         Campana campanaSeleccionada = this.sistema.getListaCampanas().get(indiceSeleccionado);
-        VentanaGestionDonantes ventanaDonantes = new VentanaGestionDonantes(this, true, campanaSeleccionada);
+        VentanaGestionDonantes ventanaDonantes = new VentanaGestionDonantes(this, true, this.sistema, campanaSeleccionada);
         ventanaDonantes.setVisible(true);
         }
     }//GEN-LAST:event_btnGestionarDonantesActionPerformed
@@ -167,19 +173,19 @@ public class VentanaPrincipal extends javax.swing.JFrame {
         int seleccion = JOptionPane.showOptionDialog(this, "Seleccione el tipo de búsqueda", "Buscar Campaña",
                 JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE, null, opciones, opciones[0]);
 
-        List<Campana> resultados = new ArrayList<>(); // Lista para guardar los resultados
+        List<Campana> resultados = new ArrayList<>(); 
 
         if (seleccion == 0) { 
-            String lugar = JOptionPane.showInputDialog(this, "Ingrese el lugar a buscar:");
+            String lugar = JOptionPane.showInputDialog(this, "Ingrese el lugar:");
             if (lugar != null && !lugar.trim().isEmpty()) {
-                //1
+                //SOBRECARGA
                 resultados = this.sistema.buscarCampana(lugar); 
             }
-        } else if (seleccion == 1) { // El usuario eligió "Por Nombre y Lugar"
-            String nombre = JOptionPane.showInputDialog(this, "Ingrese el nombre a buscar:");
-            String lugar = JOptionPane.showInputDialog(this, "Ingrese el lugar a buscar:");
+        } else if (seleccion == 1) {
+            String nombre = JOptionPane.showInputDialog(this, "Ingrese el nombre :");
+            String lugar = JOptionPane.showInputDialog(this, "Ingrese el lugar :");
             if (nombre != null && !nombre.trim().isEmpty() && lugar != null && !lugar.trim().isEmpty()) {
-                //2 
+                //SOBRECARGA 
                 resultados = this.sistema.buscarCampana(nombre, lugar);
             }
         } else {
@@ -188,7 +194,7 @@ public class VentanaPrincipal extends javax.swing.JFrame {
         }
 
         if (resultados.isEmpty()) {
-            JOptionPane.showMessageDialog(this, "No se encontraron campañas con ese criterio.", "Sin Resultados", JOptionPane.INFORMATION_MESSAGE);
+            JOptionPane.showMessageDialog(this, "No se encontraron campañas", "Sin Resultados", JOptionPane.INFORMATION_MESSAGE);
         } else {
             StringBuilder mensaje = new StringBuilder("Campañas encontradas:\n");
             for (Campana campana : resultados) {

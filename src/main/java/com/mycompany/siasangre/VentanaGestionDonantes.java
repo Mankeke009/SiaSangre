@@ -5,27 +5,28 @@
 package com.mycompany.siasangre;
 import javax.swing.DefaultListModel;
 import javax.swing.JOptionPane;
-
+import java.util.ArrayList;
+import java.util.List;
 /**
  *
  * @author Mankeke
  */
 public class VentanaGestionDonantes extends javax.swing.JDialog {
     private Campana campanaSeleccionada; 
-    private DefaultListModel<String> modeloListaDonantes; 
+    private DefaultListModel<String> modeloListaDonantes;
+    private SistemaGestion sistema;
  
-    public VentanaGestionDonantes(java.awt.Frame parent, boolean modal, Campana campana) {
+    public VentanaGestionDonantes(java.awt.Frame parent, boolean modal, SistemaGestion sistema, Campana campana) {
         super(parent, modal);
-        this.campanaSeleccionada = campana; 
+        this.sistema = sistema; 
+        this.campanaSeleccionada = campana;
         initComponents();
     
-        this.setTitle("Gestionando Donantes de: " + this.campanaSeleccionada.getNombreCampana());
-    
+        this.setTitle("Gestionando Donantes de la campana: " + this.campanaSeleccionada.getNombreCampana());
         modeloListaDonantes = new DefaultListModel<>();
         this.listaDonantesUI.setModel(modeloListaDonantes);
-    
-        actualizarListaDonantes(); 
-}
+        actualizarListaDonantes();
+    }
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -42,6 +43,7 @@ public class VentanaGestionDonantes extends javax.swing.JDialog {
         btnCerrar = new javax.swing.JButton();
         btnModificar = new javax.swing.JButton();
         btnEliminar = new javax.swing.JButton();
+        btnBuscar = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
@@ -80,6 +82,13 @@ public class VentanaGestionDonantes extends javax.swing.JDialog {
             }
         });
 
+        btnBuscar.setText("Buscar");
+        btnBuscar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnBuscarActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -89,16 +98,16 @@ public class VentanaGestionDonantes extends javax.swing.JDialog {
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 361, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(6, 6, 6)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(btnAgregar, javax.swing.GroupLayout.DEFAULT_SIZE, 251, Short.MAX_VALUE)
-                            .addComponent(btnModificar, javax.swing.GroupLayout.DEFAULT_SIZE, 251, Short.MAX_VALUE)))
+                            .addComponent(btnAgregar, javax.swing.GroupLayout.DEFAULT_SIZE, 283, Short.MAX_VALUE)
+                            .addComponent(btnModificar, javax.swing.GroupLayout.DEFAULT_SIZE, 283, Short.MAX_VALUE)))
                     .addGroup(layout.createSequentialGroup()
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(btnCerrar, javax.swing.GroupLayout.DEFAULT_SIZE, 251, Short.MAX_VALUE))
-                    .addGroup(layout.createSequentialGroup()
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(btnEliminar, javax.swing.GroupLayout.DEFAULT_SIZE, 251, Short.MAX_VALUE)))
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(btnEliminar, javax.swing.GroupLayout.DEFAULT_SIZE, 283, Short.MAX_VALUE)
+                            .addComponent(btnCerrar, javax.swing.GroupLayout.DEFAULT_SIZE, 283, Short.MAX_VALUE)
+                            .addComponent(btnBuscar, javax.swing.GroupLayout.DEFAULT_SIZE, 283, Short.MAX_VALUE))))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -112,6 +121,8 @@ public class VentanaGestionDonantes extends javax.swing.JDialog {
                         .addGap(20, 20, 20)
                         .addComponent(btnModificar, javax.swing.GroupLayout.PREFERRED_SIZE, 95, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(20, 20, 20)
+                        .addComponent(btnBuscar, javax.swing.GroupLayout.PREFERRED_SIZE, 94, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 20, Short.MAX_VALUE)
                         .addComponent(btnEliminar, javax.swing.GroupLayout.PREFERRED_SIZE, 95, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(20, 20, 20)
                         .addComponent(btnCerrar, javax.swing.GroupLayout.PREFERRED_SIZE, 94, javax.swing.GroupLayout.PREFERRED_SIZE)))
@@ -128,10 +139,10 @@ public class VentanaGestionDonantes extends javax.swing.JDialog {
         Donante donanteCreado = ventanaAgregar.getNuevoDonante();
 
         if (donanteCreado != null) {
-            this.campanaSeleccionada.AgregarDonante(donanteCreado);
+            this.sistema.agregarDonanteASistema(donanteCreado, this.campanaSeleccionada);
             this.actualizarListaDonantes();
 
-            JOptionPane.showMessageDialog(this, "Donante agregado exitosamente.", "Éxito", JOptionPane.INFORMATION_MESSAGE);
+            JOptionPane.showMessageDialog(this, "Donante agregado.", "Éxito", JOptionPane.INFORMATION_MESSAGE);
         }
     }//GEN-LAST:event_btnAgregarActionPerformed
 
@@ -143,7 +154,7 @@ public class VentanaGestionDonantes extends javax.swing.JDialog {
         int indiceSeleccionado = this.listaDonantesUI.getSelectedIndex();
 
         if (indiceSeleccionado == -1) {
-            JOptionPane.showMessageDialog(this, "Por favor, seleccione un donante para modificar.", "Error", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, "Selecciona un donante para modificar.", "Error", JOptionPane.ERROR_MESSAGE);
             return;
         }
 
@@ -160,7 +171,7 @@ public class VentanaGestionDonantes extends javax.swing.JDialog {
         int indiceSeleccionado = this.listaDonantesUI.getSelectedIndex();
 
         if (indiceSeleccionado == -1) {
-            JOptionPane.showMessageDialog(this, "Por favor, seleccione un donante para eliminar.", "Error", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, "Selecciona un donante para eliminar.", "Error", JOptionPane.ERROR_MESSAGE);
             return;
         }
 
@@ -180,8 +191,49 @@ public class VentanaGestionDonantes extends javax.swing.JDialog {
         }
     }//GEN-LAST:event_btnEliminarActionPerformed
 
+    private void btnBuscarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBuscarActionPerformed
+       Object[] opciones = {"Buscar por RUT", "Buscar por Nombre"};
+        int seleccion = JOptionPane.showOptionDialog(this, "Seleccione cómo desea buscar", "Buscar Donante",
+                JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE, null, opciones, opciones[0]);
+
+        if (seleccion == 0) { 
+            String rut = JOptionPane.showInputDialog(this, "Ingrese el RUT exacto del donante:");
+            if (rut != null && !rut.trim().isEmpty()) {
+                
+                List<Donante> donantesEncontrados = this.sistema.buscarDonante(rut, this.campanaSeleccionada);//USO SOBRECARGA 1
+
+                 if (donantesEncontrados.isEmpty()) {
+                    JOptionPane.showMessageDialog(this, "No se encontraron donantes con ese nombre.", "Sin Resultados", JOptionPane.INFORMATION_MESSAGE);
+                } else {
+                    StringBuilder mensaje = new StringBuilder("Donantes encontrados:\n");
+                    for (Donante donante : donantesEncontrados) {
+                        mensaje.append("- ").append(donante.toString()).append("\n");
+                    }
+                    JOptionPane.showMessageDialog(this, mensaje.toString(), "Resultados de Búsqueda", JOptionPane.INFORMATION_MESSAGE);
+                }
+            }
+        } else if (seleccion == 1) { 
+            String nombre = JOptionPane.showInputDialog(this, "Ingrese el nombre (o parte del nombre):");
+            if (nombre != null && !nombre.trim().isEmpty()) {
+                
+                List<Donante> donantesEncontrados = this.sistema.buscarDonante(nombre, this.campanaSeleccionada, 1); //USO SOBRECARGA 1
+
+                if (donantesEncontrados.isEmpty()) {
+                    JOptionPane.showMessageDialog(this, "No se encontraron donantes con ese nombre.", "Sin Resultados", JOptionPane.INFORMATION_MESSAGE);
+                } else {
+                    StringBuilder mensaje = new StringBuilder("Donantes encontrados:\n");
+                    for (Donante donante : donantesEncontrados) {
+                        mensaje.append("- ").append(donante.toString()).append("\n");
+                    }
+                    JOptionPane.showMessageDialog(this, mensaje.toString(), "Resultados de Búsqueda", JOptionPane.INFORMATION_MESSAGE);
+                }
+            }
+        }
+    }//GEN-LAST:event_btnBuscarActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnAgregar;
+    private javax.swing.JButton btnBuscar;
     private javax.swing.JButton btnCerrar;
     private javax.swing.JButton btnEliminar;
     private javax.swing.JButton btnModificar;

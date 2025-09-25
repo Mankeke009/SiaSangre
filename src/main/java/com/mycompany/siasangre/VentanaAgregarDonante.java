@@ -123,11 +123,9 @@ public class VentanaAgregarDonante extends javax.swing.JDialog {
     }// </editor-fold>//GEN-END:initComponents
 
     private void txtNombreActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtNombreActionPerformed
-        // TODO add your handling code here:
     }//GEN-LAST:event_txtNombreActionPerformed
 
     private void txtTipoSangreActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtTipoSangreActionPerformed
-        // TODO add your handling code here:
     }//GEN-LAST:event_txtTipoSangreActionPerformed
 
     private void btnAceptarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAceptarActionPerformed
@@ -148,7 +146,6 @@ public class VentanaAgregarDonante extends javax.swing.JDialog {
     }//GEN-LAST:event_btnCancelarActionPerformed
 
     private void txtRutActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtRutActionPerformed
-        // TODO add your handling code here:
     }//GEN-LAST:event_txtRutActionPerformed
 
 
