@@ -44,6 +44,6 @@ public class Donante {
     }
     @Override
     public String toString() {
-        return "Nombre:" + nombre + "| Tipo de Sangre:" + tipoSangre + "| RUT:" + RUT ;
+        return "Nombre: " + nombre + "| Tipo de Sangre:" + tipoSangre + "| RUT:" + RUT ;
     }
 }
