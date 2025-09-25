@@ -116,22 +116,35 @@ public class VentanaPrincipal extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnAgregarCampanaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAgregarCampanaActionPerformed
-        String nombre = JOptionPane.showInputDialog(this, "Ingrese nombre de campaña:", "Agregar Campaña", JOptionPane.PLAIN_MESSAGE);
+        String nombre = JOptionPane.showInputDialog(this, "Ingrese nombre de la nueva campaña:", "Agregar Campaña", JOptionPane.PLAIN_MESSAGE);
         if (nombre == null || nombre.trim().isEmpty()) {
+            return;
+        }
+        nombre = nombre.trim(); 
+
+        // Validación para Nombre de Campaña 
+        if (!nombre.matches("^[a-zA-Z\\s]+$")) {
+            JOptionPane.showMessageDialog(this, "El nombre de la campaña solo puede contener letras y espacios.", "Error de Formato", JOptionPane.ERROR_MESSAGE);
             return;
         }
 
         String lugar = JOptionPane.showInputDialog(this, "Ingrese el lugar de la campaña:", "Agregar Campaña", JOptionPane.PLAIN_MESSAGE);
         if (lugar == null || lugar.trim().isEmpty()) {
-            return; 
+            return;
+        }
+        lugar = lugar.trim(); 
+
+        // Validación para Lugar (letras, números y espacios)
+        if (!lugar.matches("^[a-zA-Z0-9\\s]+$")) {
+            JOptionPane.showMessageDialog(this, "El lugar solo puede contener letras, números y espacios.", "Error de Formato", JOptionPane.ERROR_MESSAGE);
+            return;
         }
 
+        // Si todo es válido, creamos la campaña
         Campana nuevaCampana = new Campana(nombre, lugar);
         this.sistema.getListaCampanas().add(nuevaCampana);
-
         this.actualizarListaCampanas();
-
-        JOptionPane.showMessageDialog(this, "Campaña agregada.", "Éxito", JOptionPane.INFORMATION_MESSAGE);
+        JOptionPane.showMessageDialog(this, "Campaña agregada exitosamente.", "Éxito", JOptionPane.INFORMATION_MESSAGE);
     }//GEN-LAST:event_btnAgregarCampanaActionPerformed
 
     private void btnEliminarCampanaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEliminarCampanaActionPerformed

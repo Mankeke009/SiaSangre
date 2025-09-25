@@ -64,7 +64,6 @@ public class SistemaGestion {
                 if (linea.startsWith("#") || linea.trim().isEmpty()) continue;
                 String[] datos = linea.split(",");
                 try {
-                    // Limpiamos el RUT del CSV (ej: "11.111.111-1") para obtener solo el número.
                     String rutLimpio = datos[0].replace(".", "").split("-")[0];
                     int rutNum = Integer.parseInt(rutLimpio);
 
@@ -91,13 +90,11 @@ public class SistemaGestion {
                 String[] datos = linea.split(",");
                 Campana campana = new Campana(datos[0], datos[1]);
 
-                // Si la línea tiene una tercera parte (los RUTs de donantes)
+                
                 if (datos.length == 3) {
                     String[] rutsDonantesTexto = datos[2].split("\\|");
                     for (String rutTexto : rutsDonantesTexto) {
                         try {
-                            // ---- ESTA ES LA CORRECCIÓN CLAVE ----
-                            // Convertimos el RUT de texto a número antes de buscar
                             int rutNum = Integer.parseInt(rutTexto.trim());
                             Donante donanteAsignar = mapaDonantes.get(rutNum);
 
@@ -160,23 +157,23 @@ public class SistemaGestion {
         return encontrados;
 }
 
-    //---------------------------------------------------------------------------------------------------------------
+    //-----------------------------------------GUARDAR DONANTES EN CSV-----------------------------------------------
 
     public void guardarDonantesCSV() {
-        try (PrintWriter pw = new PrintWriter(new FileWriter("donantes.csv"))) {
+        try (PrintWriter pw = new PrintWriter(new FileWriter("donantes.csv"))) { //CUMPLIENTO SIA 2.8
             pw.println("# RUT,Nombre,TipoSangre");
 
             for (Donante donante : this.mapaDonantes.values()) {
                 pw.println(donante.getRUT() + "," + donante.getNombre() + "," + donante.getTipoSangre());
             }
             System.out.println("Donantes guardados en donantes.csv");
-        } catch (IOException e) {
+        } catch (IOException e) { //CUMPLIMIENTO SIA 2.8
             System.err.println("Error al guardar en 'donantes.csv': " + e.getMessage());
         }
     }
-
+    //--------------------------------------------GUARDAR CAMPANAS EN CSV----------------------------------------------
     public void guardarCampanasCSV() {
-        try (PrintWriter pw = new PrintWriter(new FileWriter("campanas.csv"))) {
+        try (PrintWriter pw = new PrintWriter(new FileWriter("campanas.csv"))) { //-------> CUMPLMIENTO SIA 2.8
             pw.println("# Nombre,Lugar,RUTs_Donantes_Separados_Por_|");
 
             for (Campana campana : this.listaCampanas) {
@@ -196,7 +193,7 @@ public class SistemaGestion {
                 pw.println(linea.toString());
             }
             System.out.println("Campanas guardadas campanas.csv");
-        } catch (IOException e) {
+        } catch (IOException e) { // ------------>CUMPLIMIENTO SIA 2.8
             System.err.println("Error al guardar en 'campanas.csv': " + e.getMessage());
         }
     }

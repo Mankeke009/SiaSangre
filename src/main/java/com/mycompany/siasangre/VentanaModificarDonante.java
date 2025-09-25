@@ -153,9 +153,19 @@ public class VentanaModificarDonante extends javax.swing.JDialog {
             return;
         }
 
+        if (!nuevoNombre.matches("^[a-zA-Z\\s]+$")) {
+            JOptionPane.showMessageDialog(this, "El nombre solo puede contener letras y espacios.", "Error de Formato", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
+        if (!nuevoTipoSangre.matches("^(?i)(A|B|O|AB)[\\+-]$")) {
+            JOptionPane.showMessageDialog(this, "El tipo de sangre no es válido. Ejemplos: A+, O-, AB+", "Error de Formato", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
         this.donanteAEditar.setNombre(nuevoNombre);
         this.donanteAEditar.setTipoSangre(nuevoTipoSangre);
-        
+
         this.dispose();
     }//GEN-LAST:event_btnAceptarActionPerformed
 
