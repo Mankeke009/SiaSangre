@@ -18,7 +18,7 @@ public class VentanaModificarDonante extends javax.swing.JDialog {
         this.setTitle("Modificar Donante");
         setLocationRelativeTo(parent);
 
-        this.txtRut.setText(donanteAEditar.getRUT());
+        this.txtRut.setText(String.valueOf(donanteAEditar.getRUT()));
         this.txtNombre.setText(donanteAEditar.getNombre());
         this.txtTipoSangre.setText(donanteAEditar.getTipoSangre());
         

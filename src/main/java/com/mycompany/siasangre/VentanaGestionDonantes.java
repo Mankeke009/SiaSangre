@@ -197,7 +197,7 @@ public class VentanaGestionDonantes extends javax.swing.JDialog {
                 JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE, null, opciones, opciones[0]);
 
         if (seleccion == 0) { 
-            String rut = JOptionPane.showInputDialog(this, "Ingrese el RUT exacto del donante:");
+            String rut = JOptionPane.showInputDialog(this, "Ingrese el RUT del donante que desea buscar:");
             if (rut != null && !rut.trim().isEmpty()) {
                 
                 List<Donante> donantesEncontrados = this.sistema.buscarDonante(rut, this.campanaSeleccionada);//USO SOBRECARGA 1
@@ -216,7 +216,7 @@ public class VentanaGestionDonantes extends javax.swing.JDialog {
             String nombre = JOptionPane.showInputDialog(this, "Ingrese el nombre (o parte del nombre):");
             if (nombre != null && !nombre.trim().isEmpty()) {
                 
-                List<Donante> donantesEncontrados = this.sistema.buscarDonante(nombre, this.campanaSeleccionada, 1); //USO SOBRECARGA 1
+                List<Donante> donantesEncontrados = this.sistema.buscarDonante(nombre, this.campanaSeleccionada); //USO SOBRECARGA 1
 
                 if (donantesEncontrados.isEmpty()) {
                     JOptionPane.showMessageDialog(this, "No se encontraron donantes con ese nombre.", "Sin Resultados", JOptionPane.INFORMATION_MESSAGE);

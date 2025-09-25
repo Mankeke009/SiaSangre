@@ -49,7 +49,7 @@ public class Campana {
         this.donantesregistrados.add(donante);
     }
     //------------------------TERCERA SOBRECARGA----------------------------------------
-    public void AgregarDonante(String rut, String nombre, String tipoSangre) {
+    public void AgregarDonante(int rut, String nombre, String tipoSangre) {
         Donante nuevoDonante = new Donante(rut, nombre, tipoSangre);
         this.donantesregistrados.add(nuevoDonante);
     }

@@ -9,21 +9,21 @@ package com.mycompany.siasangre;
  * @author Mankeke
  */
 public class Donante {
-    private String RUT;
+    private int RUT;
     private String nombre;
     private String tipoSangre;
     
-    public Donante(String RUT, String nombre, String tipoSangre){
+    public Donante(int RUT, String nombre, String tipoSangre){
         this.RUT = RUT;
         this.nombre = nombre;
         this.tipoSangre = tipoSangre;        
     }
 
-    public String getRUT() {
+    public int getRUT() {
         return RUT;
     }
 
-    public void setRUT(String RUT) {
+    public void setRUT(int RUT) {
         this.RUT = RUT;
     }
 

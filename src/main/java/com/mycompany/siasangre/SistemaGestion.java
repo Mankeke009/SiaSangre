@@ -20,7 +20,7 @@ import java.util.List;
 public class SistemaGestion {
     
     private List<Campana> listaCampanas;
-    private Map<String, Donante> mapaDonantes;
+    private Map<Integer, Donante> mapaDonantes;
     
     public SistemaGestion() {
         this.listaCampanas = new ArrayList<>();
@@ -56,22 +56,32 @@ public class SistemaGestion {
         System.out.println("Donantes y campanas cargadas");
     }
     */
+    //-----------------------------------------CARGAR DONANTES DE CSV---------------------------------------------
     public void cargarDonantes() {
         try (BufferedReader br = new BufferedReader(new FileReader("donantes.csv"))) {
             String linea;
             while ((linea = br.readLine()) != null) {
                 if (linea.startsWith("#") || linea.trim().isEmpty()) continue;
-                
                 String[] datos = linea.split(",");
-                Donante donante = new Donante(datos[0], datos[1], datos[2]);
-                mapaDonantes.put(donante.getRUT(), donante);
+                try {
+                    // Limpiamos el RUT del CSV (ej: "11.111.111-1") para obtener solo el número.
+                    String rutLimpio = datos[0].replace(".", "").split("-")[0];
+                    int rutNum = Integer.parseInt(rutLimpio);
+
+                    Donante donante = new Donante(rutNum, datos[1], datos[2]);
+                    mapaDonantes.put(donante.getRUT(), donante);
+                } catch (NumberFormatException | ArrayIndexOutOfBoundsException e) {
+                    System.err.println("Error de formato en RUT, se omitirá la línea del CSV: " + linea);
+                }
             }
             System.out.println(mapaDonantes.size() + " donantes cargados exitosamente.");
         } catch (IOException e) {
-            System.err.println("Error al leer archivo");
+            System.err.println("Error al leer el archivo de donantes.");
         }
     }
     
+    //-----------------------------------------------CARGAR CAMPANAS DE CSV---------------------------------------
+
     public void cargarCampanas() {
         try (BufferedReader br = new BufferedReader(new FileReader("campanas.csv"))) {
             String linea;
@@ -80,23 +90,30 @@ public class SistemaGestion {
 
                 String[] datos = linea.split(",");
                 Campana campana = new Campana(datos[0], datos[1]);
-                
+
+                // Si la línea tiene una tercera parte (los RUTs de donantes)
                 if (datos.length == 3) {
-                    String[] rutsDonantes = datos[2].split("\\|");
-                    for (String rut : rutsDonantes) {
-                        Donante donanteAsignar = mapaDonantes.get(rut.trim());
-                        if (donanteAsignar != null) {
-                            campana.AgregarDonante(donanteAsignar);
-                        } else {
-                            System.err.println("No se encontro el donante.");
+                    String[] rutsDonantesTexto = datos[2].split("\\|");
+                    for (String rutTexto : rutsDonantesTexto) {
+                        try {
+                            // ---- ESTA ES LA CORRECCIÓN CLAVE ----
+                            // Convertimos el RUT de texto a número antes de buscar
+                            int rutNum = Integer.parseInt(rutTexto.trim());
+                            Donante donanteAsignar = mapaDonantes.get(rutNum);
+
+                            if (donanteAsignar != null) {
+                                campana.AgregarDonante(donanteAsignar);
+                            }
+                        } catch (NumberFormatException e) {
+                            System.err.println("RUT inválido, se omitirá: " + rutTexto);
                         }
                     }
                 }
                 listaCampanas.add(campana);
             }
-            System.out.println(listaCampanas.size() + " campanas cargadas exitosamente.");
+            System.out.println( + listaCampanas.size() + " campañas cargadas ");
         } catch (IOException e) {
-            System.err.println("Error al leer archivo" + e.getMessage());
+            System.err.println(" Error al leer el archivo " + e.getMessage());
         }
     }
     
@@ -121,28 +138,28 @@ public class SistemaGestion {
         return encontrados;
     }
     //----------------------------PRIMERA SOBRECARGA--------------------------------------------------------
-    public List<Donante> buscarDonante(String rut, Campana campana) {
-       List<Donante> encontrados = new ArrayList<>(); // Creamos una lista vacía
-       rut = rut.trim();
-       for (Donante donante : campana.getDonantesregistrados()) {
-           if (donante.getRUT().equalsIgnoreCase(rut)) {
-               encontrados.add(donante); // Si lo encontramos, lo añadimos a la lista
-               break; // Como el RUT es único, no hay necesidad de seguir buscando
-           }
-       }
-       return encontrados; // Devolvemos la lista (tendrá 0 o 1 elemento)
-   }
+    public List<Donante> buscarDonante(int rut, Campana campana) {
+        List<Donante> encontrados = new ArrayList<>(); 
+        for (Donante donante : campana.getDonantesregistrados()) {
+            if (donante.getRUT() == rut) {
+                encontrados.add(donante); 
+                break; 
+            }
+        }
+        return encontrados;
+    }
     //----------------------------PRIMERA SOBRECARGA----------------------------------------------------------------
-    public List<Donante> buscarDonante(String nombre, Campana campana, int modo) {
+    public List<Donante> buscarDonante(String nombre, Campana campana) {
         List<Donante> encontrados = new ArrayList<>();
         nombre = nombre.trim().toLowerCase();
         for (Donante donante : campana.getDonantesregistrados()) {
             if (donante.getNombre().toLowerCase().contains(nombre)) {
-                encontrados.add(donante);
+            encontrados.add(donante);
             }
         }
-    return encontrados;
+        return encontrados;
 }
+
     //---------------------------------------------------------------------------------------------------------------
 
     public void guardarDonantesCSV() {

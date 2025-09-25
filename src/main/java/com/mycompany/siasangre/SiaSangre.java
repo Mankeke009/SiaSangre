@@ -12,7 +12,7 @@ import javax.swing.SwingUtilities;
 public class SiaSangre {
     public static void main(String[] args) {
         SistemaGestion sistema = new SistemaGestion();
-        //sistema.cargarDatosCodigo(); // Cargamos los datos de ejemplo
+        //sistema.cargarDatosCodigo(); 
         sistema.cargarDonantes();
         sistema.cargarCampanas();
 

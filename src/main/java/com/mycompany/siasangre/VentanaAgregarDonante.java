@@ -129,16 +129,25 @@ public class VentanaAgregarDonante extends javax.swing.JDialog {
     }//GEN-LAST:event_txtTipoSangreActionPerformed
 
     private void btnAceptarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAceptarActionPerformed
-        String rut = this.txtRut.getText().trim();
-        String nombre = this.txtNombre.getText().trim();
-        String tipoSangre = this.txtTipoSangre.getText().trim();
+        try {
+        // Obtenemos el texto y lo convertimos a int
+            int rutNum = Integer.parseInt(this.txtRut.getText().trim());
+            String nombre = this.txtNombre.getText().trim();
+            String tipoSangre = this.txtTipoSangre.getText().trim();
 
-        if (rut.isEmpty() || nombre.isEmpty() || tipoSangre.isEmpty()) {
-            JOptionPane.showMessageDialog(this, "Todos los campos son obligatorios.", "Error", JOptionPane.ERROR_MESSAGE);
-            return; 
-        }        
-        this.nuevoDonante = new Donante(rut, nombre, tipoSangre);
-        this.dispose();
+            if (nombre.isEmpty() || tipoSangre.isEmpty()) {
+                JOptionPane.showMessageDialog(this, "Todos los campos son obligatorios.", "Error", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+
+        // Creamos el donante usando el rutNum (int)
+            this.nuevoDonante = new Donante(rutNum, nombre, tipoSangre);
+            this.dispose();
+
+        } catch (NumberFormatException e) {
+            // Si el usuario escribe algo que no es un número en el RUT, mostramos un error
+            JOptionPane.showMessageDialog(this, "El RUT debe ser un número válido.", "Error de Formato", JOptionPane.ERROR_MESSAGE);
+        }
     }//GEN-LAST:event_btnAceptarActionPerformed
 
     private void btnCancelarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCancelarActionPerformed
