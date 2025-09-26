@@ -7,6 +7,11 @@ import javax.swing.DefaultListModel;
 import javax.swing.JOptionPane;
 import java.util.ArrayList;
 import java.util.List;
+import java.io.FileWriter;
+import java.io.PrintWriter;
+import java.io.IOException;
+import javax.swing.JFileChooser;
+import java.io.File;
 /**
  *
  * @author Mankeke
@@ -42,6 +47,7 @@ public class VentanaPrincipal extends javax.swing.JFrame {
         btnEliminarCampana = new javax.swing.JButton();
         btnGestionarDonantes = new javax.swing.JButton();
         btnBuscarCampana = new javax.swing.JButton();
+        btnGenerarReporte = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -80,26 +86,36 @@ public class VentanaPrincipal extends javax.swing.JFrame {
             }
         });
 
+        btnGenerarReporte.setText("GENERAR REPORTE");
+        btnGenerarReporte.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnGenerarReporteActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addGap(20, 20, 20)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 483, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(25, 25, 25)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(btnAgregarCampana, javax.swing.GroupLayout.PREFERRED_SIZE, 235, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btnBuscarCampana, javax.swing.GroupLayout.PREFERRED_SIZE, 235, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btnGestionarDonantes, javax.swing.GroupLayout.PREFERRED_SIZE, 237, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btnEliminarCampana, javax.swing.GroupLayout.PREFERRED_SIZE, 237, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(20, Short.MAX_VALUE))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(btnGenerarReporte, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 483, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(25, 25, 25)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(btnAgregarCampana, javax.swing.GroupLayout.PREFERRED_SIZE, 235, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(btnBuscarCampana, javax.swing.GroupLayout.PREFERRED_SIZE, 235, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(btnGestionarDonantes, javax.swing.GroupLayout.PREFERRED_SIZE, 237, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(btnEliminarCampana, javax.swing.GroupLayout.PREFERRED_SIZE, 237, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                .addContainerGap(16, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+            .addGroup(layout.createSequentialGroup()
                 .addGap(20, 20, 20)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                     .addComponent(jScrollPane1)
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(btnAgregarCampana, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -107,9 +123,11 @@ public class VentanaPrincipal extends javax.swing.JFrame {
                         .addComponent(btnBuscarCampana, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(32, 32, 32)
                         .addComponent(btnEliminarCampana, javax.swing.GroupLayout.PREFERRED_SIZE, 122, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 26, Short.MAX_VALUE)
+                        .addGap(32, 32, 32)
                         .addComponent(btnGestionarDonantes, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addGap(20, 20, 20))
+                .addGap(18, 18, 18)
+                .addComponent(btnGenerarReporte, javax.swing.GroupLayout.DEFAULT_SIZE, 120, Short.MAX_VALUE)
+                .addContainerGap())
         );
 
         pack();
@@ -217,11 +235,63 @@ public class VentanaPrincipal extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_btnBuscarCampanaActionPerformed
 
+    private void btnGenerarReporteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGenerarReporteActionPerformed
+        //SIA 2,10 COMPLETADO!!!!! 
+        JFileChooser fileChooser = new JFileChooser();
+        fileChooser.setDialogTitle("Guardar Reporte");
+        fileChooser.setSelectedFile(new File("reporte_donaciones.txt")); 
+
+        int userSelection = fileChooser.showSaveDialog(this);
+
+        if (userSelection == JFileChooser.APPROVE_OPTION) {
+            File archivoParaGuardar = fileChooser.getSelectedFile();
+
+            try (PrintWriter pw = new PrintWriter(new FileWriter(archivoParaGuardar))) {
+
+                pw.println("=============================================");
+                pw.println("      REPORTE DE CAMPAÑAS DE DONACIÓN");
+                pw.println("=============================================");
+                pw.println();
+
+                for (Campana campana : this.sistema.getListaCampanas()) {
+                    pw.println("--- CAMPAÑA: " + campana.getNombreCampana().toUpperCase() + " ---");
+                    pw.println("Lugar: " + campana.getLugar());
+
+                    List<Donante> donantes = campana.getDonantesregistrados();
+                    if (donantes.isEmpty()) {
+                        pw.println("Donantes: No hay donantes registrados.");
+                    } 
+                    else {
+                        pw.println("Donantes registrados: " + donantes.size());
+                        for (Donante donante : donantes) {
+                            pw.printf("- %s (RUT: %d, Sangre: %s)\n", 
+                                      donante.getNombre(), donante.getRUT(), donante.getTipoSangre());
+                        }
+                    }
+                    pw.println();
+                }
+
+                pw.println("--- FIN DEL REPORTE ---"); 
+                JOptionPane.showMessageDialog(this, 
+                        "Reporte generado exitosamente en:\n" + archivoParaGuardar.getAbsolutePath(), 
+                        "Éxito", 
+                        JOptionPane.INFORMATION_MESSAGE);
+
+            } catch (IOException e) {
+                JOptionPane.showMessageDialog(this, 
+                        "Error al guardar el reporte: " + e.getMessage(), 
+                        "Error de Archivo", 
+                        JOptionPane.ERROR_MESSAGE);
+            }
+        }
+    }//GEN-LAST:event_btnGenerarReporteActionPerformed
+
     
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnAgregarCampana;
     private javax.swing.JButton btnBuscarCampana;
     private javax.swing.JButton btnEliminarCampana;
+    private javax.swing.JButton btnGenerarReporte;
     private javax.swing.JButton btnGestionarDonantes;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JList<String> listaCampanasUI;
