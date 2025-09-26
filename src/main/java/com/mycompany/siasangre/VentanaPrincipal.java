@@ -14,7 +14,7 @@ import java.util.List;
 public class VentanaPrincipal extends javax.swing.JFrame {
     private SistemaGestion sistema; 
     private DefaultListModel<String> modeloLista; 
-
+//----------------------------------CONSTRUCTOR--------------------------------    
     public VentanaPrincipal(SistemaGestion sistema) {
         this.sistema = sistema;
         initComponents();
@@ -31,7 +31,7 @@ public class VentanaPrincipal extends javax.swing.JFrame {
             }
     });
 }
-
+//----------------------------------CONSTRUCTOR--------------------------------    
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -122,7 +122,6 @@ public class VentanaPrincipal extends javax.swing.JFrame {
         }
         nombre = nombre.trim(); 
 
-        // Validación para Nombre de Campaña 
         if (!nombre.matches("^[a-zA-Z\\s]+$")) {
             JOptionPane.showMessageDialog(this, "El nombre de la campaña solo puede contener letras y espacios.", "Error de Formato", JOptionPane.ERROR_MESSAGE);
             return;
@@ -134,13 +133,11 @@ public class VentanaPrincipal extends javax.swing.JFrame {
         }
         lugar = lugar.trim(); 
 
-        // Validación para Lugar (letras, números y espacios)
         if (!lugar.matches("^[a-zA-Z0-9\\s]+$")) {
             JOptionPane.showMessageDialog(this, "El lugar solo puede contener letras, números y espacios.", "Error de Formato", JOptionPane.ERROR_MESSAGE);
             return;
         }
 
-        // Si todo es válido, creamos la campaña
         Campana nuevaCampana = new Campana(nombre, lugar);
         this.sistema.getListaCampanas().add(nuevaCampana);
         this.actualizarListaCampanas();
@@ -174,7 +171,8 @@ public class VentanaPrincipal extends javax.swing.JFrame {
 
         if (indiceSeleccionado == -1) {
             JOptionPane.showMessageDialog(this, "Por favor, seleccione una campaña para gestionar.", "Error", JOptionPane.ERROR_MESSAGE);
-    } else {
+        } 
+        else {
         Campana campanaSeleccionada = this.sistema.getListaCampanas().get(indiceSeleccionado);
         VentanaGestionDonantes ventanaDonantes = new VentanaGestionDonantes(this, true, this.sistema, campanaSeleccionada);
         ventanaDonantes.setVisible(true);
@@ -187,28 +185,30 @@ public class VentanaPrincipal extends javax.swing.JFrame {
                 JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE, null, opciones, opciones[0]);
 
         List<Campana> resultados = new ArrayList<>(); 
-
+//------------------------------SI ES QUE QUEREMOS BUSCAR CAMPANA SOLO POR LUGAR ------------------------------------------
         if (seleccion == 0) { 
             String lugar = JOptionPane.showInputDialog(this, "Ingrese el lugar:");
             if (lugar != null && !lugar.trim().isEmpty()) {
-                //SOBRECARGA
-                resultados = this.sistema.buscarCampana(lugar); 
+                resultados = this.sistema.buscarCampana(lugar); //UTILIZACION DE SOBRECARGA 
             }
-        } else if (seleccion == 1) {
+        }
+//------------------------------SI ES QUE QUEREMOS BUSCAR CAMPANA POR NOMBRE Y LUGAR ------------------------------------------           
+        else if (seleccion == 1) {
             String nombre = JOptionPane.showInputDialog(this, "Ingrese el nombre :");
             String lugar = JOptionPane.showInputDialog(this, "Ingrese el lugar :");
             if (nombre != null && !nombre.trim().isEmpty() && lugar != null && !lugar.trim().isEmpty()) {
-                //SOBRECARGA 
-                resultados = this.sistema.buscarCampana(nombre, lugar);
+                
+                resultados = this.sistema.buscarCampana(nombre, lugar);//UTILIZACION DE SOBRECARGA 
             }
-        } else {
+        } 
+        else {
             
             return;
         }
-
         if (resultados.isEmpty()) {
             JOptionPane.showMessageDialog(this, "No se encontraron campañas", "Sin Resultados", JOptionPane.INFORMATION_MESSAGE);
-        } else {
+        } 
+        else {
             StringBuilder mensaje = new StringBuilder("Campañas encontradas:\n");
             for (Campana campana : resultados) {
                 mensaje.append("- ").append(campana.getNombreCampana()).append(" (").append(campana.getLugar()).append(")\n");

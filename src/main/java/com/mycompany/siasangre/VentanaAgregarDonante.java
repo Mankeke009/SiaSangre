@@ -11,7 +11,7 @@ import javax.swing.JOptionPane;
  */
 public class VentanaAgregarDonante extends javax.swing.JDialog {
     private Donante nuevoDonante = null;   
-  
+//----------------------------------CONSTRUCTOR--------------------------------      
     public VentanaAgregarDonante(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
         initComponents();
@@ -21,6 +21,7 @@ public class VentanaAgregarDonante extends javax.swing.JDialog {
     public Donante getNuevoDonante() {
         return nuevoDonante;
     }
+//----------------------------------CONSTRUCTOR--------------------------------    
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -129,40 +130,34 @@ public class VentanaAgregarDonante extends javax.swing.JDialog {
     }//GEN-LAST:event_txtTipoSangreActionPerformed
 
     private void btnAceptarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAceptarActionPerformed
-        try { // ---------> CUMPLMIENTO SIA 2.8
-        String rutTexto = this.txtRut.getText().trim();
-        String nombre = this.txtNombre.getText().trim();
-        String tipoSangre = this.txtTipoSangre.getText().trim();
+        try {//-----> SIA 2.8
+            String rutTexto = this.txtRut.getText().trim();
+            String nombre = this.txtNombre.getText().trim();
+            String tipoSangre = this.txtTipoSangre.getText().trim();
+//----------------------------------VALIDACIONES POR SI SI ESCRIBE ALGUN "CARACTER" NO DESEADO--------------------------------
 
-        if (rutTexto.isEmpty() || nombre.isEmpty() || tipoSangre.isEmpty()) {
-            JOptionPane.showMessageDialog(this, "Todos los campos son obligatorios.", "Error", JOptionPane.ERROR_MESSAGE);
-            return;
-        }
-        
-        if (!nombre.matches("^[a-zA-Z\\s]+$")) {
-            JOptionPane.showMessageDialog(this, "El nombre solo puede contener letras y espacios.", "Error de Formato", JOptionPane.ERROR_MESSAGE);
-            return;
-        }
-        
-        
-        if (!tipoSangre.matches("^(?i)(A|B|O|AB)[\\+-]$")) {
-            JOptionPane.showMessageDialog(this, "El tipo de sangre no es válido. Ejemplos: A+, O-, AB+", "Error de Formato", JOptionPane.ERROR_MESSAGE);
-            return;
-        }
+            if (rutTexto.isEmpty() || nombre.isEmpty() || tipoSangre.isEmpty()) {
+                throw new DatoVacioException("Todos los campos son obligatorios.");//-----> SIA 2.9
+            }
+            if (!nombre.matches("^[a-zA-Z\\s]+$")) {
+                throw new DatoVacioException("El nombre solo puede contener letras y espacios.");//-----> SIA 2.9
+            }
+            if (!tipoSangre.matches("^(?i)(A|B|O|AB)[\\+-]$")) {
+                throw new DatoVacioException("El tipo de sangre no es válido. Ej: A+, O-, AB+");//-----> SIA 2.9
+            }
+            
+//----------------------------------VALIDACIONES POR SI SI ESCRIBE ALGUN "CARACTER" NO DESEADO--------------------------------
+            int rutNum = Integer.parseInt(rutTexto);
 
-        
-        int rutNum = Integer.parseInt(rutTexto);
-        
-        
-        if (this.nuevoDonante == null) { 
             this.nuevoDonante = new Donante(rutNum, nombre, tipoSangre);
-        } 
-        
-        this.dispose();
+            this.dispose();
 
-    } catch (NumberFormatException e) {//--------> CUMPLIMIENTO SIA 2.8
-        JOptionPane.showMessageDialog(this, "El RUT debe ser un número válido (sin puntos, guion ni dígito verificador).", "Error de Formato", JOptionPane.ERROR_MESSAGE);
-    }
+        }catch (NumberFormatException e) {//-----> SIA 2.8
+            RUTInvalidoException error = new RUTInvalidoException("El RUT debe ser un número válido.");//-----> SIA 2.9
+            JOptionPane.showMessageDialog(this, error.getMessage(), "Error de Formato", JOptionPane.ERROR_MESSAGE);
+        }catch (DatoVacioException e) {//-----> SIA 2.9 Y 2.8
+            JOptionPane.showMessageDialog(this, e.getMessage(), "Error de Validación", JOptionPane.ERROR_MESSAGE);
+        }
     }//GEN-LAST:event_btnAceptarActionPerformed
 
     private void btnCancelarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCancelarActionPerformed

@@ -26,7 +26,7 @@ public class SistemaGestion {
         this.listaCampanas = new ArrayList<>();
         this.mapaDonantes = new HashMap<>();
     }
-    
+//---------------------------CARGAR DATOS DIRECTAMENTE EN CODIGO----------------------------------   
     /*public void cargarDatosCodigo(){
 
         Donante d1 = new Donante("11111111-1", "Juan Perez", "O+");
@@ -42,13 +42,13 @@ public class SistemaGestion {
         Campana c1 = new Campana("Dona Vida Valparaiso", "Plaza Sotomayor");
         Campana c2 = new Campana("Sangre para Vina", "Mall Marina");
         Campana c3 = new Campana("Campana de Invierno", "Hospital G. Fricke");
-//-----------------------------------------------------------------------------------
+
         c1.AgregarDonante(d1);//Uso Tercera Sobre carga
         c1.AgregarDonante(d2);//Uso Tercera Sobre carga
         c2.AgregarDonante(d3);//Uso Tercera Sobre carga
         c3.AgregarDonante(d4);//Uso Tercera Sobre carga
         c3.AgregarDonante(d1);//Uso Tercera Sobre carga
-//-------------------------------------------------------------------------------------
+
         listaCampanas.add(c1);
         listaCampanas.add(c2);
         listaCampanas.add(c3);
@@ -56,6 +56,8 @@ public class SistemaGestion {
         System.out.println("Donantes y campanas cargadas");
     }
     */
+//---------------------------CARGAR DATOS DIRECTAMENTE EN CODIGO---------------------------------- 
+    
     //-----------------------------------------CARGAR DONANTES DE CSV---------------------------------------------
     public void cargarDonantes() {
         try (BufferedReader br = new BufferedReader(new FileReader("donantes.csv"))) {
@@ -74,7 +76,7 @@ public class SistemaGestion {
                 }
             }
             System.out.println(mapaDonantes.size() + " donantes cargados exitosamente.");
-        } catch (IOException e) {
+        }catch (IOException e) {
             System.err.println("Error al leer el archivo de donantes.");
         }
     }
@@ -101,7 +103,7 @@ public class SistemaGestion {
                             if (donanteAsignar != null) {
                                 campana.AgregarDonante(donanteAsignar);
                             }
-                        } catch (NumberFormatException e) {
+                        }catch (NumberFormatException e) {
                             System.err.println("RUT inválido, se omitirá: " + rutTexto);
                         }
                     }
@@ -109,7 +111,7 @@ public class SistemaGestion {
                 listaCampanas.add(campana);
             }
             System.out.println( + listaCampanas.size() + " campañas cargadas ");
-        } catch (IOException e) {
+        }catch (IOException e) {
             System.err.println(" Error al leer el archivo " + e.getMessage());
         }
     }
@@ -193,7 +195,7 @@ public class SistemaGestion {
                 pw.println(linea.toString());
             }
             System.out.println("Campanas guardadas campanas.csv");
-        } catch (IOException e) { // ------------>CUMPLIMIENTO SIA 2.8
+        }catch (IOException e) { // ------------>CUMPLIMIENTO SIA 2.8
             System.err.println("Error al guardar en 'campanas.csv': " + e.getMessage());
         }
     }

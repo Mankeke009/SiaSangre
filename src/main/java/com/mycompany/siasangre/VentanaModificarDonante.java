@@ -10,7 +10,8 @@ import javax.swing.JOptionPane;
  * @author Mankeke
  */
 public class VentanaModificarDonante extends javax.swing.JDialog {
-     private Donante donanteAEditar;
+    private Donante donanteAEditar;
+//----------------------------------CONSTRUCTOR--------------------------------    
     public VentanaModificarDonante(java.awt.Frame parent, boolean modal, Donante donante) {
         super(parent, modal);
         this.donanteAEditar = donante; 
@@ -24,6 +25,7 @@ public class VentanaModificarDonante extends javax.swing.JDialog {
         
         this.txtRut.setEditable(false);
     }
+//----------------------------------CONSTRUCTOR--------------------------------    
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -145,28 +147,31 @@ public class VentanaModificarDonante extends javax.swing.JDialog {
     }//GEN-LAST:event_txtTipoSangreActionPerformed
 
     private void btnAceptarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAceptarActionPerformed
-        String nuevoNombre = this.txtNombre.getText().trim();
-        String nuevoTipoSangre = this.txtTipoSangre.getText().trim();
+        try {//-----> SIA 2.8
+            String nuevoNombre = this.txtNombre.getText().trim();
+            String nuevoTipoSangre = this.txtTipoSangre.getText().trim();
+//----------------------------------VALIDACIONES POR SI SI ESCRIBE ALGUN "CARACTER" NO DESEADO--------------------------------
 
-        if (nuevoNombre.isEmpty() || nuevoTipoSangre.isEmpty()) {
-            JOptionPane.showMessageDialog(this, "Los campos de nombre y tipo de sangre son obligatorios.", "Error", JOptionPane.ERROR_MESSAGE);
-            return;
+            if (nuevoNombre.isEmpty() || nuevoTipoSangre.isEmpty()) {
+                throw new DatoVacioException("Los campos de nombre y tipo de sangre son obligatorios.");//-----> SIA 2.9
+            }
+            if (!nuevoNombre.matches("^[a-zA-Z\\s]+$")) {
+                throw new DatoVacioException("El nombre solo puede contener letras y espacios.");//-----> SIA 2.9
+            }
+            if (!nuevoTipoSangre.matches("^(?i)(A|B|O|AB)[\\+-]$")) {
+                throw new DatoVacioException("El tipo de sangre no es válido. Ej: A+, O-, AB+");//-----> SIA 2.9
+            }
+            
+//----------------------------------VALIDACIONES POR SI SI ESCRIBE ALGUN "CARACTER" NO DESEADO--------------------------------
+
+            this.donanteAEditar.setNombre(nuevoNombre);
+            this.donanteAEditar.setTipoSangre(nuevoTipoSangre);
+            this.dispose();
+
+        }catch (DatoVacioException e) {//-----> SIA 2.9 Y  2.8
+            JOptionPane.showMessageDialog(this, e.getMessage(), "Error de Validación", JOptionPane.ERROR_MESSAGE);
         }
 
-        if (!nuevoNombre.matches("^[a-zA-Z\\s]+$")) {
-            JOptionPane.showMessageDialog(this, "El nombre solo puede contener letras y espacios.", "Error de Formato", JOptionPane.ERROR_MESSAGE);
-            return;
-        }
-
-        if (!nuevoTipoSangre.matches("^(?i)(A|B|O|AB)[\\+-]$")) {
-            JOptionPane.showMessageDialog(this, "El tipo de sangre no es válido. Ejemplos: A+, O-, AB+", "Error de Formato", JOptionPane.ERROR_MESSAGE);
-            return;
-        }
-
-        this.donanteAEditar.setNombre(nuevoNombre);
-        this.donanteAEditar.setTipoSangre(nuevoTipoSangre);
-
-        this.dispose();
     }//GEN-LAST:event_btnAceptarActionPerformed
 
     private void btnCancelarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCancelarActionPerformed
