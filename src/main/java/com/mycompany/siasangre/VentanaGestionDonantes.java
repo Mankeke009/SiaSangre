@@ -187,24 +187,29 @@ public class VentanaGestionDonantes extends javax.swing.JDialog {
                 JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE, null, opciones, opciones[0]);
         
 //----------------------------SI ES QUE QUEREMOS BUSCAR AL DONANTE POR RUT --------------------------------------------------------------------
-        if (seleccion == 0) { 
-            String rut = JOptionPane.showInputDialog(this, "Ingrese el RUT del donante que desea buscar:");
-            if (rut != null && !rut.trim().isEmpty()) {
-                
-                List<Donante> donantesEncontrados = this.sistema.buscarDonante(rut, this.campanaSeleccionada);//USO SOBRECARGA 
-
-                if (donantesEncontrados.isEmpty()) {
-                    JOptionPane.showMessageDialog(this, "No se encontraron donantes con ese nombre.", "Sin Resultados", JOptionPane.INFORMATION_MESSAGE);
+        if (seleccion == 0) { // Búsqueda por RUT
+            List<Donante> resultados = new ArrayList<>();
+            String rutTexto = JOptionPane.showInputDialog(this, "Ingrese el RUT a buscar:");
+            if (rutTexto != null && !rutTexto.trim().isEmpty()) {
+                try {
+                    int rutNum = Integer.parseInt(rutTexto.trim());
+                    resultados = this.sistema.buscarDonante(rutNum, this.campanaSeleccionada);
+                }catch (NumberFormatException e) {
+                    JOptionPane.showMessageDialog(this, "El RUT debe ser un número válido.", "Error", JOptionPane.ERROR_MESSAGE);
+                    return;
+                }
+            }        
+            if (resultados.isEmpty()) {
+                JOptionPane.showMessageDialog(this, "No se encontraron donantes.", "Sin Resultados", JOptionPane.INFORMATION_MESSAGE);
                 } 
                 else {
                     StringBuilder mensaje = new StringBuilder("Donantes encontrados:\n");
-                    for (Donante donante : donantesEncontrados) {
+                    for (Donante donante : resultados) {
                         mensaje.append("- ").append(donante.toString()).append("\n");
                     }
                     JOptionPane.showMessageDialog(this, mensaje.toString(), "Resultados de Búsqueda", JOptionPane.INFORMATION_MESSAGE);
                 }
-            }
-        } 
+        }
 //----------------------------SI ES QUE QUEREMOS BUSCAR AL DONANTE POR NOMBRE --------------------------------------------------------------------        
         else if (seleccion == 1) { 
             String nombre = JOptionPane.showInputDialog(this, "Ingrese el nombre (o parte del nombre):");
